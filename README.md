@@ -1,5 +1,7 @@
 # python-redpocket
 
+[![python38|39](https://img.shields.io/pypi/pyversions/python-redpocket)](https://pypi.org/project/python-redpocket/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![codecov](https://codecov.io/gh/mbillow/python-redpocket/branch/main/graph/badge.svg?token=Q88GID8SSQ)](https://codecov.io/gh/mbillow/python-redpocket) [![pypi downloads](https://img.shields.io/pypi/dm/python-redpocket)](https://pypi.org/project/python-redpocket/)
+
 A simple, fully tested, Pythonic wrapper around RedPocket Mobile's API.
 
 ## Example Usage

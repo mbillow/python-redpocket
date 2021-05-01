@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "python-redpocket"
+version = "0.1.0"
+description = "A Python API Interface for RedPocket Mobile"
+authors = ["Marc Billow <marc@billow.me>"]
+license = "MIT"
+packages = [
+    {include = "redpocket"},
+]
+exclude = ["tests/**/*"]
+readme = "README.md"
+homepage = "https://github.com/mbillow/python-redpocket"
+repository = "https://github.com/mbillow/python-redpocket"
+documentation = "https://github.com/mbillow/python-redpocket"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Intended Audience :: End Users/Desktop"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.25.1"
+beautifulsoup4 = "^4.9.3"
+
+[tool.poetry.dev-dependencies]
+black = "^21.4b0"
+tox = "^3.23.0"
+flake8 = "^3.9.1"
+pytest = "^6.2.3"
+pytest-cov = "^2.11.1"
+pytest-mock = "^3.6.0"
+responses = "^0.13.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

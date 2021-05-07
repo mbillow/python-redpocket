@@ -30,7 +30,7 @@ print(lines)
 line_details = lines[0].get_details()
 print(line_details)
 # RedPocketLineDetails(
-#     number=5184152406, 
+#     number=1234567890, 
 #     product_code='GSMA', 
 #     status='Active', 
 #     plan_id='355', 

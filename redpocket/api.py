@@ -3,7 +3,6 @@ import requests
 import logging
 import base64
 from dataclasses import dataclass, InitVar
-from bs4 import BeautifulSoup
 from datetime import datetime
 from typing import List, Callable, Tuple, Any
 
@@ -173,11 +172,10 @@ class RedPocket:
         :rtype str
         """
         login_page = self._session.get("https://www.redpocket.com/login")
-        login_soup = BeautifulSoup(login_page.text, features="html.parser")
-        csrf_element = login_soup.find("input", {"name": "csrf"})
+        csrf_element = re.search(r'<input type="hidden" name="csrf" value="([\w|-]+)">', login_page.text)
 
         if csrf_element:
-            csrf = csrf_element.get("value")
+            csrf = csrf_element.group(1)
             self._logger.debug("Using CSRF: %s", csrf)
             return csrf
 

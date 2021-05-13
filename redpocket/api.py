@@ -242,7 +242,7 @@ class RedPocket:
 
     def get_line_details(self, account_hash: str) -> RedPocketLineDetails:
         details = self.request(
-            url=f"https://www.redpocket.com/account/get-details?id={account_hash}"
+            url=f"https://www.redpocket.com/account/get-details?id={account_hash}&type=api"
         )
         details_json = details.json()
         return RedPocketLineDetails.from_api(

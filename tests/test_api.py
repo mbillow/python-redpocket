@@ -134,7 +134,7 @@ def test_get_line_details(
     )
     responses.add(
         responses.GET,
-        "https://www.redpocket.com/account/get-details?id=MTIzNDU2",
+        "https://www.redpocket.com/account/get-details?id=MTIzNDU2&type=api",
         status=200,
         json={"return_code": 1, "return_data": mock_line_details},
     )
@@ -157,7 +157,7 @@ def test_get_all_line_details(
     )
     responses.add(
         responses.GET,
-        "https://www.redpocket.com/account/get-details?id=MTIzNDU2",
+        "https://www.redpocket.com/account/get-details?id=MTIzNDU2&type=api",
         status=200,
         json={"return_code": 1, "return_data": mock_line_details},
     )

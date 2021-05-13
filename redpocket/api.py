@@ -172,7 +172,9 @@ class RedPocket:
         :rtype str
         """
         login_page = self._session.get("https://www.redpocket.com/login")
-        csrf_element = re.search(r'<input type="hidden" name="csrf" value="([\w|-]+)">', login_page.text)
+        csrf_element = re.search(
+            r'<input type="hidden" name="csrf" value="([\w|-]+)">', login_page.text
+        )
 
         if csrf_element:
             csrf = csrf_element.group(1)

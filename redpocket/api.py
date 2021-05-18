@@ -204,12 +204,15 @@ class RedPocket:
         self,
         method: str = "get",
         url: str = "",
+        params: dict = None,
         data: dict = None,
         _is_retry: bool = False,
     ) -> requests.Response:
         self._logger.debug("API Request: [%s] URL: %s", method.upper(), url)
 
-        request = self._session.request(method=method, url=url, data=data)
+        request = self._session.request(
+            method=method, url=url, params=params, data=data
+        )
         if request.status_code != requests.codes.ok:
             raise RedPocketAPIError("API Returned Non-200 Response!")
 
@@ -241,8 +244,13 @@ class RedPocket:
         ]
 
     def get_line_details(self, account_hash: str) -> RedPocketLineDetails:
+        params = {
+            "id": account_hash,
+            "type": "api",
+        }
         details = self.request(
-            url=f"https://www.redpocket.com/account/get-details?id={account_hash}"
+            url="https://www.redpocket.com/account/get-details",
+            params=params,
         )
         details_json = details.json()
         return RedPocketLineDetails.from_api(

@@ -2,7 +2,6 @@ import re
 import requests
 import logging
 import base64
-import locale
 from dataclasses import dataclass, InitVar
 from datetime import datetime
 from typing import List, Callable, Tuple, Any
@@ -58,8 +57,7 @@ class RedPocketLineDetails:
             """API design is hard... What even is a none type..."""
             if balance.lower() in ["unlimited", "n/a"]:
                 return -1
-            locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
-            return locale.atof(balance)
+            return float(balance.replace(",", ""))
 
         def str_to_date(date_str: str) -> datetime.date:
             """Two formats of date values... because why not?!"""

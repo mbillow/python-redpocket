@@ -28,6 +28,12 @@ def mock_line(mock_responses_path: pathlib.Path) -> dict:
 
 
 @pytest.fixture(scope="session")
+def mock_other_lines(mock_responses_path: pathlib.Path) -> dict:
+    with open(mock_responses_path / "other_lines.json", "r") as other_lines:
+        return json.load(other_lines)
+
+
+@pytest.fixture(scope="session")
 def mock_line_details(mock_responses_path: pathlib.Path) -> dict:
     with open(mock_responses_path / "line_details.json", "r") as line_details:
         return json.load(line_details)["return_data"]

@@ -123,6 +123,23 @@ def test_get_line(successful_login: None, mock_line: dict):
 
 
 @responses.activate
+def test_get_multiple_lines(successful_login: None, mock_other_lines: dict):
+    responses.add(
+        responses.GET,
+        "https://www.redpocket.com/account/get-other-lines",
+        status=200,
+        json=mock_other_lines,
+    )
+    rp = RedPocket(username="fake", password="password")
+    lines = rp.get_lines()
+
+    assert len(lines) == 2
+    assert type(lines[0]) == RedPocketLine
+    assert lines[0].number == 1234567890
+    assert lines[1].number == 1111111111
+
+
+@responses.activate
 def test_get_line_details(
     successful_login: None, mock_line: dict, mock_line_details: dict
 ):

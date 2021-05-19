@@ -2,6 +2,7 @@ import re
 import requests
 import logging
 import base64
+import locale
 from dataclasses import dataclass, InitVar
 from datetime import datetime
 from typing import List, Callable, Tuple, Any
@@ -53,11 +54,12 @@ class RedPocketLineDetails:
 
     @classmethod
     def from_api(cls, api_response: dict):
-        def sanitize_balance(balance: str) -> int:
+        def sanitize_balance(balance: str) -> float:
             """API design is hard... What even is a none type..."""
             if balance.lower() in ["unlimited", "n/a"]:
                 return -1
-            return int(re.sub(r"\D+", "", balance))
+            locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+            return locale.atof(balance)
 
         def str_to_date(date_str: str) -> datetime.date:
             """Two formats of date values... because why not?!"""

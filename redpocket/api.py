@@ -49,7 +49,7 @@ class RedPocketLineDetails:
     main_balance: int
     voice_balance: int
     messaging_balance: int
-    data_balance: int
+    data_balance: float
     phone: RedPocketPhone
 
     @classmethod

@@ -4,7 +4,7 @@ import logging
 import base64
 from dataclasses import dataclass, InitVar
 from datetime import datetime
-from typing import List, Callable, Tuple, Any
+from typing import List, Callable, Tuple, Any, Union
 
 from .exceptions import RedPocketException, RedPocketAuthError, RedPocketAPIError
 
@@ -45,19 +45,22 @@ class RedPocketLineDetails:
     expiration: datetime.date
     last_autorenew: datetime.date
     last_expiration: datetime.date
-    main_balance: int
-    voice_balance: int
-    messaging_balance: int
-    data_balance: float
+    main_balance: Union[int, float]
+    voice_balance: Union[int, float]
+    messaging_balance: Union[int, float]
+    data_balance: Union[int, float]
     phone: RedPocketPhone
 
     @classmethod
     def from_api(cls, api_response: dict):
-        def sanitize_balance(balance: str) -> float:
+        def sanitize_balance(balance: str) -> Union[int, float]:
             """API design is hard... What even is a none type..."""
             if balance.lower() in ["unlimited", "n/a"]:
                 return -1
-            return float(balance.replace(",", ""))
+            # Take the string and convert it to a numeric type.
+            to_number = float(balance.replace(",", ""))
+            # Only return a float if we need decimal precision.
+            return to_number if to_number % 1 else int(to_number)
 
         def str_to_date(date_str: str) -> datetime.date:
             """Two formats of date values... because why not?!"""

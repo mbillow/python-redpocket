@@ -160,6 +160,33 @@ def test_get_line_details(
     line_details = lines[0].get_details()
 
     assert line_details.number == 1234567890
+    assert line_details.data_balance == 7657
+    assert isinstance(line_details.data_balance, int)
+
+
+@responses.activate
+def test_get_line_details_low_balance(
+    successful_login: None, mock_line: dict, mock_line_details_low_data: dict
+):
+    responses.add(
+        responses.GET,
+        "https://www.redpocket.com/account/get-other-lines",
+        status=200,
+        json={"return_code": 1, "return_data": {"confirmedLines": [mock_line]}},
+    )
+    responses.add(
+        responses.GET,
+        "https://www.redpocket.com/account/get-details?id=MTIzNDU2&type=api",
+        status=200,
+        json={"return_code": 1, "return_data": mock_line_details_low_data},
+    )
+    rp = RedPocket(username="fake", password="password")
+    lines = rp.get_lines()
+    line_details = lines[0].get_details()
+
+    assert line_details.number == 1234567890
+    assert line_details.data_balance == 657.56
+    assert isinstance(line_details.data_balance, float)
 
 
 @responses.activate

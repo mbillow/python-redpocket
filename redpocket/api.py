@@ -68,9 +68,17 @@ class RedPocketLineDetails:
                 # If the type is falsy, return None.
                 return
             try:
+                # Most dates in the API are in this format...
                 return datetime.strptime(date_str, "%m/%d/%Y").date()
             except ValueError:
-                return datetime.strptime(date_str, "%Y-%m-%d").date()
+                # Please forgive me for this nested try-except block.
+                # This API is _whack_.
+                try:
+                    # But some are in this format...
+                    return datetime.strptime(date_str, "%Y-%m-%d").date()
+                except ValueError:
+                    # And sometimes you get random crap like '0000-00-00'...
+                    return
             except TypeError:
                 # If the type is truthy, but can't be cast to a date, return None.
                 return

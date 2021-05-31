@@ -4,7 +4,7 @@ import logging
 import base64
 from dataclasses import dataclass, InitVar
 from datetime import datetime
-from typing import List, Callable, Tuple, Any, Union
+from typing import List, Callable, Tuple, Any, Union, Optional
 
 from .exceptions import RedPocketException, RedPocketAuthError, RedPocketAPIError
 
@@ -42,9 +42,9 @@ class RedPocketLineDetails:
     status: str
     plan_id: str
     plan_code: str
-    expiration: datetime.date
-    last_autorenew: datetime.date
-    last_expiration: datetime.date
+    expiration: Optional[datetime.date]
+    last_autorenew: Optional[datetime.date]
+    last_expiration: Optional[datetime.date]
     main_balance: Union[int, float]
     voice_balance: Union[int, float]
     messaging_balance: Union[int, float]
@@ -62,12 +62,18 @@ class RedPocketLineDetails:
             # Only return a float if we need decimal precision.
             return to_number if to_number % 1 else int(to_number)
 
-        def str_to_date(date_str: str) -> datetime.date:
+        def str_to_date(date_str: str) -> Optional[datetime.date]:
             """Two formats of date values... because why not?!"""
+            if not date_str:
+                # If the type is falsy, return None.
+                return
             try:
                 return datetime.strptime(date_str, "%m/%d/%Y").date()
             except ValueError:
                 return datetime.strptime(date_str, "%Y-%m-%d").date()
+            except TypeError:
+                # If the type is truthy, but can't be cast to a date, return None.
+                return
 
         return cls(
             number=int(api_response.get("mdn")),
@@ -94,12 +100,16 @@ class RedPocketLineDetails:
     @property
     def remaining_days_in_cycle(self) -> int:
         """Number of days until plan is refreshed."""
+        if not self.expiration:
+            return 0
         delta = self.expiration - _today()
         return int(delta.days)
 
     @property
     def remaining_months_purchased(self) -> int:
         """Number of months left for automatic renewal."""
+        if not self.last_expiration:
+            return 0
         start_date = _today()
         end_date = self.last_expiration
         return (end_date.year - start_date.year) * 12 + (

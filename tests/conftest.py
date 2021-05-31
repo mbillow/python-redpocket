@@ -46,6 +46,14 @@ def mock_line_details_low_data(mock_responses_path: pathlib.Path) -> dict:
 
 
 @pytest.fixture(scope="session")
+def mock_line_details_no_auto_renew(mock_responses_path: pathlib.Path) -> dict:
+    with open(
+        mock_responses_path / "line_details_no_auto_renew.json", "r"
+    ) as line_details:
+        return json.load(line_details)["return_data"]
+
+
+@pytest.fixture(scope="session")
 def mock_login_page(mock_responses_path: pathlib.Path) -> str:
     with open(mock_responses_path / "login_form.html", "r") as login:
         return login.read()

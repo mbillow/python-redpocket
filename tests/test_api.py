@@ -43,6 +43,12 @@ def test_line_details_from_api(mocker, mock_line_details: dict):
     assert details.remaining_months_purchased == 8
 
 
+def test_line_details_from_api_truthy_type_error(mock_line_details: dict):
+    mock_line_details["lastExpirationDate"] = True
+    details = RedPocketLineDetails.from_api(api_response=mock_line_details)
+    assert details.remaining_months_purchased == 0
+
+
 def test_line_from_api(mock_line: dict):
     mock_callback = MagicMock()
 
@@ -187,6 +193,33 @@ def test_get_line_details_low_balance(
     assert line_details.number == 1234567890
     assert line_details.data_balance == 657.56
     assert isinstance(line_details.data_balance, float)
+
+
+@responses.activate
+def test_get_line_details_no_auto_renew(
+    successful_login: None, mock_line: dict, mock_line_details_no_auto_renew: dict
+):
+    responses.add(
+        responses.GET,
+        "https://www.redpocket.com/account/get-other-lines",
+        status=200,
+        json={"return_code": 1, "return_data": {"confirmedLines": [mock_line]}},
+    )
+    responses.add(
+        responses.GET,
+        "https://www.redpocket.com/account/get-details?id=MTIzNDU2&type=api",
+        status=200,
+        json={"return_code": 1, "return_data": mock_line_details_no_auto_renew},
+    )
+    rp = RedPocket(username="fake", password="password")
+    lines = rp.get_lines()
+    line_details = lines[0].get_details()
+
+    assert line_details.expiration is None
+    assert line_details.last_expiration is None
+    assert line_details.last_autorenew is None
+    assert line_details.remaining_months_purchased == 0
+    assert line_details.remaining_days_in_cycle == 0
 
 
 @responses.activate
